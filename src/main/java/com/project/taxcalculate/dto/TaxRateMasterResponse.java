@@ -15,11 +15,11 @@ public class TaxRateMasterResponse {
 
     private Long id;
     private String category;
-    private BigDecimal chargeableIncomeMin;
-    private BigDecimal chargeableIncomeMax;
-    private BigDecimal calculationMin;
-    private BigDecimal caluclationMax;
+    private String chargeableIncomeMin;
+    private String chargeableIncomeMax;
+    private String calculationMin;
+    private String caluclationMax;
     private Double rate;
-    private BigDecimal taxMin;
-    private BigDecimal taxMax;
+    private String taxMin;
+    private String taxMax;
 }

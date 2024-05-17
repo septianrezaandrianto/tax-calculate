@@ -57,7 +57,8 @@ public class GlobalExceptionHandlerTest {
         when(bindingResult.getFieldErrors()).thenReturn(Collections.singletonList(fieldError));
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
 
-        ResponseEntity<GeneralResponse<Object>> responseEntity = globalExceptionHandler.handleValidationErrors(methodArgumentNotValidException);
+        ResponseEntity<GeneralResponse<Object>> responseEntity = globalExceptionHandler
+                .handleValidationErrors(methodArgumentNotValidException);
         List<String> errors = Objects.requireNonNull(responseEntity.getBody()).getErrorList();
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), responseEntity.getBody().getResponseCode());
@@ -114,7 +115,8 @@ public class GlobalExceptionHandlerTest {
     void testHandleBadRequestCustomException() {
         String errorMessage = "Bad Request";
         when(badRequestCustomException.getMessage()).thenReturn(errorMessage);
-        ResponseEntity<GeneralResponse<Object>> responseEntity = globalExceptionHandler.handleBadRequestCustomException(badRequestCustomException);
+        ResponseEntity<GeneralResponse<Object>> responseEntity = globalExceptionHandler
+                .handleBadRequestCustomException(badRequestCustomException);
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), Objects.requireNonNull(responseEntity.getBody()).getResponseCode());
         assertEquals(errorMessage, responseEntity.getBody().getResponseMessage());

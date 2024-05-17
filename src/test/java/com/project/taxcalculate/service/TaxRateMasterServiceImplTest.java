@@ -6,6 +6,7 @@ import com.project.taxcalculate.dto.PaginatePageRequest;
 import com.project.taxcalculate.dto.TaxRateMasterResponse;
 import com.project.taxcalculate.entity.TaxRateMaster;
 import com.project.taxcalculate.repository.TaxRateMasterRepository;
+import com.project.taxcalculate.util.GeneralUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,6 +30,7 @@ public class TaxRateMasterServiceImplTest {
 
     @Mock
     private TaxRateMasterRepository taxRateMasterRepository;
+    @Mock private GeneralUtil generalUtil;
 
     @InjectMocks
     private TaxRateMasterServiceImpl taxRateMasterService;
@@ -86,13 +88,13 @@ public class TaxRateMasterServiceImplTest {
         List<TaxRateMasterResponse> taxRateMasterList = new ArrayList<>();
         TaxRateMasterResponse taxRateMasterResponse = TaxRateMasterResponse.builder()
                 .category("A")
-                .chargeableIncomeMin(BigDecimal.ONE)
-                .chargeableIncomeMax(BigDecimal.TEN)
-                .calculationMin(BigDecimal.ONE)
-                .caluclationMax(BigDecimal.TWO)
+                .chargeableIncomeMin(generalUtil.convertToRM(BigDecimal.valueOf(600001)))
+                .chargeableIncomeMax(generalUtil.convertToRM(BigDecimal.valueOf(2000000)))
+                .calculationMin(generalUtil.convertToRM(BigDecimal.valueOf(600000)))
+                .caluclationMax(generalUtil.convertToRM(BigDecimal.valueOf(392000)))
                 .rate(1.0)
-                .taxMin(BigDecimal.ZERO)
-                .taxMax(BigDecimal.TEN)
+                .taxMin(generalUtil.convertToRM(BigDecimal.valueOf(2000000)))
+                .taxMax(generalUtil.convertToRM(BigDecimal.valueOf(136400)))
                 .build();
         taxRateMasterList.add(taxRateMasterResponse);
         return taxRateMasterList;
