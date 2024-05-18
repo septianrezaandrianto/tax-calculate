@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.project.taxcalculate.constant.Constant;
 import com.project.taxcalculate.dto.GeneralResponse;
 import com.project.taxcalculate.dto.PaginatePageRequest;
-import com.project.taxcalculate.service.TaxRateMasterServiceImpl;
+import com.project.taxcalculate.service.TaxReliefMasterServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +17,15 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(TaxRateMasterController.class)
-public class TaxRateMasterControllerTest {
+@WebMvcTest(TaxReliefMasterController.class)
+public class TaxReliefMasterControllerTest {
 
     @MockBean
-    private TaxRateMasterServiceImpl taxRateMasterService;
+    private TaxReliefMasterServiceImpl taxReliefMasterService;
     @Autowired
     private MockMvc mockMvc;
 
@@ -36,11 +36,11 @@ public class TaxRateMasterControllerTest {
         request.setPageNumber("0");
         request.setPageSize("10");
 
-        when(taxRateMasterService.getDataByPage(request))
+        when(taxReliefMasterService.getDataByPage(request))
                 .thenReturn(mappingGeneralResponse());
 
         MockHttpServletResponse result = mockMvc.perform(MockMvcRequestBuilders
-                        .post("/taxRateMaster/getDataByPage")
+                        .post("/taxReliefMaster/getDataByPage")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .characterEncoding("utf-8")
@@ -55,4 +55,5 @@ public class TaxRateMasterControllerTest {
                 .responseMessage(Constant.ResponseApi.SUCCESS_MESSAGE)
                 .build();
     }
+
 }

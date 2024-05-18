@@ -14,4 +14,12 @@ public class GeneralUtil {
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("ms", "MY"));
         return Objects.nonNull(amount) ? currencyFormatter.format(amount).split("\\.")[0] : null;
     }
+
+    public String mappingFilter(String filter) {
+        if(Objects.isNull(filter) || "".equals(filter.trim())) {
+            return "%%";
+        } else {
+            return "%".concat(filter.toLowerCase()).concat("%");
+        }
+    }
 }

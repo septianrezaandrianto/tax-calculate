@@ -1,6 +1,6 @@
 package com.project.taxcalculate.service;
 
-import com.project.taxcalculate.constant.TaxCalculateConstant;
+import com.project.taxcalculate.constant.Constant;
 import com.project.taxcalculate.dto.GeneralResponse;
 import com.project.taxcalculate.dto.PaginatePageRequest;
 import com.project.taxcalculate.dto.TaxRateMasterResponse;
@@ -72,7 +72,7 @@ public class TaxRateMasterServiceImpl implements TaxRateMasterService {
 
     @Override
     public GeneralResponse<Object> getDataByPage(PaginatePageRequest paginatePageRequest) {
-        String filter = mappingFilter(paginatePageRequest.getFilter());
+        String filter = generalUtil.mappingFilter(paginatePageRequest.getFilter());
         int pageSize = Integer.parseInt(paginatePageRequest.getPageSize());
         int pageNumber = Integer.parseInt(paginatePageRequest.getPageNumber());
         Pageable paging = PageRequest.of(pageNumber, pageSize);
@@ -97,7 +97,7 @@ public class TaxRateMasterServiceImpl implements TaxRateMasterService {
 
         return GeneralResponse.builder()
                 .responseCode(HttpStatus.OK.value())
-                .responseMessage(TaxCalculateConstant.ResponseApi.SUCCESS_MESSAGE)
+                .responseMessage(Constant.ResponseApi.SUCCESS_MESSAGE)
                 .data(taxRateMasterResponseList)
                 .pageNumber(pageNumber)
                 .pageSize(pageSize)
@@ -105,18 +105,9 @@ public class TaxRateMasterServiceImpl implements TaxRateMasterService {
                 .build();
     }
 
-    private String mappingFilter(String filter) {
-        if(Objects.isNull(filter) || "".equals(filter.trim())) {
-            return "%%";
-        } else {
-            return "%".concat(filter.toLowerCase()).concat("%");
-        }
-    }
-
     private TaxRateMaster mappingTaxMasterData(String category, BigDecimal chargeableIncomeMin, BigDecimal chargeableIncomeMax,
                                                BigDecimal calculationMin, BigDecimal caluclationMax, double rate, BigDecimal taxMin, BigDecimal taxMax) {
         Date nowDate = new Date();
-        String inputer = "SYSTEM";
 
         return TaxRateMaster.builder()
                 .category(category)
@@ -128,9 +119,9 @@ public class TaxRateMasterServiceImpl implements TaxRateMasterService {
                 .taxMin(taxMin)
                 .taxMax(taxMax)
                 .createdDate(nowDate)
-                .createdBy(inputer)
+                .createdBy(Constant.DEFAULT_SYSTEM)
                 .modifiedDate(nowDate)
-                .modifiedBy(inputer)
+                .modifiedBy(Constant.DEFAULT_SYSTEM)
                 .isDelete(false)
                 .build();
     }

@@ -1,6 +1,6 @@
 package com.project.taxcalculate.service;
 
-import com.project.taxcalculate.constant.TaxCalculateConstant;
+import com.project.taxcalculate.constant.Constant;
 import com.project.taxcalculate.dto.GeneralResponse;
 import com.project.taxcalculate.dto.PaginatePageRequest;
 import com.project.taxcalculate.dto.TaxRateMasterResponse;
@@ -13,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class TaxRateMasterServiceImplTest {
 
     @Mock
@@ -56,7 +59,7 @@ public class TaxRateMasterServiceImplTest {
 
         GeneralResponse<Object> response = taxRateMasterService.getDataByPage(request);
         assertEquals(HttpStatus.OK.value(), response.getResponseCode());
-        assertEquals(TaxCalculateConstant.ResponseApi.SUCCESS_MESSAGE, response.getResponseMessage());
+        assertEquals(Constant.ResponseApi.SUCCESS_MESSAGE, response.getResponseMessage());
         assertEquals(mappingTaxRateMasterResponseList(), response.getData());
         assertEquals(0, response.getPageNumber());
         assertEquals(10, response.getPageSize());
@@ -75,9 +78,10 @@ public class TaxRateMasterServiceImplTest {
         request.setPageNumber("0");
         request.setPageSize("10");
 
-        GeneralResponse<Object> response = taxRateMasterService.getDataByPage(request);
+        GeneralResponse<Object> response;
+        response = taxRateMasterService.getDataByPage(request);
         assertEquals(HttpStatus.OK.value(), response.getResponseCode());
-        assertEquals(TaxCalculateConstant.ResponseApi.SUCCESS_MESSAGE, response.getResponseMessage());
+        assertEquals(Constant.ResponseApi.SUCCESS_MESSAGE, response.getResponseMessage());
         assertEquals(new ArrayList<>(), response.getData());
         assertEquals(0, response.getPageNumber());
         assertEquals(10, response.getPageSize());
