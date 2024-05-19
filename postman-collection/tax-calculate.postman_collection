@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "getDataByPage",
+			"name": "taxRateMaster/getDataByPage",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -35,7 +35,7 @@
 			"response": []
 		},
 		{
-			"name": "getDataByPage",
+			"name": "taxReliefMaster/getDataByPage",
 			"request": {
 				"method": "POST",
 				"header": [],
