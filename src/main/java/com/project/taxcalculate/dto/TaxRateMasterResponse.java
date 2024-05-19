@@ -16,7 +16,6 @@ public class TaxRateMasterResponse {
     private Long id;
     private String category;
     private String chargeableIncomeMin;
-    private String chargeableIncomeMax;
     private String calculationMin;
     private String caluclationMax;
     private Double rate;

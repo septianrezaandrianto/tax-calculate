@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -40,12 +39,12 @@ public class TaxRateMasterServiceImplTest {
 
     @Test
     void testInsertMasterData() {
-        when(taxRateMasterRepository.saveAll(anyList())).thenReturn(new ArrayList<>());
+        when(taxRateMasterRepository.saveAll(anyList())).thenReturn(mappingTaxRateMasterList());
         taxRateMasterService.insertMasterData();
     }
 
     @Test
-    void testGetDataByPage() {
+    void testGetDataByPage_withFilter() {
         PaginatePageRequest request = new PaginatePageRequest();
         request.setFilter("A");
         request.setPageNumber("0");
@@ -53,8 +52,30 @@ public class TaxRateMasterServiceImplTest {
 
         Page<TaxRateMaster> mockPage = mock(Page.class);
         when(mockPage.getContent()).thenReturn(mappingTaxRateMasterList());
-        when(mockPage.getTotalElements()).thenReturn(0L);
-        when(taxRateMasterRepository.getDataByPage(anyString(), Mockito.any(Pageable.class)))
+        when(mockPage.getTotalElements()).thenReturn((long)mappingTaxRateMasterList().size());
+        when(taxRateMasterRepository.getDataByPageWithFilter(anyString(), any(Pageable.class)))
+                .thenReturn(mockPage);
+        when(generalUtil.mappingFilter(any(String.class))).thenReturn("%A%");
+        when(generalUtil.convertToRM(BigDecimal.valueOf(5000))).thenReturn("RM5,000");
+        GeneralResponse<Object> response = taxRateMasterService.getDataByPage(request);
+        assertEquals(HttpStatus.OK.value(), response.getResponseCode());
+        assertEquals(Constant.ResponseApi.SUCCESS_MESSAGE, response.getResponseMessage());
+        assertEquals(mappingTaxRateMasterResponseList(), response.getData());
+        assertEquals(0, response.getPageNumber());
+        assertEquals(10, response.getPageSize());
+        assertEquals(1, response.getTotalData());
+    }
+
+    @Test
+    void testGetDataByPage() {
+        PaginatePageRequest request = new PaginatePageRequest();
+        request.setPageNumber("0");
+        request.setPageSize("10");
+
+        Page<TaxRateMaster> mockPage = mock(Page.class);
+        when(mockPage.getContent()).thenReturn(mappingTaxRateMasterList());
+        when(mockPage.getTotalElements()).thenReturn((long)mappingTaxRateMasterList().size());
+        when(taxRateMasterRepository.getDataByPage(any(Pageable.class)))
                 .thenReturn(mockPage);
 
         GeneralResponse<Object> response = taxRateMasterService.getDataByPage(request);
@@ -63,37 +84,15 @@ public class TaxRateMasterServiceImplTest {
         assertEquals(mappingTaxRateMasterResponseList(), response.getData());
         assertEquals(0, response.getPageNumber());
         assertEquals(10, response.getPageSize());
-        assertEquals(0, response.getTotalData());
-    }
-
-    @Test
-    void testGetDataByPage_emptyList() {
-        Page<TaxRateMaster> mockPage = mock(Page.class);
-        when(mockPage.getContent()).thenReturn(new ArrayList<>());
-        when(mockPage.getTotalElements()).thenReturn(0L);
-        when(taxRateMasterRepository.getDataByPage(anyString(), Mockito.any(Pageable.class)))
-                .thenReturn(mockPage);
-        PaginatePageRequest request = new PaginatePageRequest();
-        request.setFilter("");
-        request.setPageNumber("0");
-        request.setPageSize("10");
-
-        GeneralResponse<Object> response;
-        response = taxRateMasterService.getDataByPage(request);
-        assertEquals(HttpStatus.OK.value(), response.getResponseCode());
-        assertEquals(Constant.ResponseApi.SUCCESS_MESSAGE, response.getResponseMessage());
-        assertEquals(new ArrayList<>(), response.getData());
-        assertEquals(0, response.getPageNumber());
-        assertEquals(10, response.getPageSize());
-        assertEquals(0, response.getTotalData());
+        assertEquals(1, response.getTotalData());
     }
 
     private List<TaxRateMasterResponse> mappingTaxRateMasterResponseList() {
         List<TaxRateMasterResponse> taxRateMasterList = new ArrayList<>();
         TaxRateMasterResponse taxRateMasterResponse = TaxRateMasterResponse.builder()
+                .id(1L)
                 .category("A")
                 .chargeableIncomeMin(generalUtil.convertToRM(BigDecimal.valueOf(600001)))
-                .chargeableIncomeMax(generalUtil.convertToRM(BigDecimal.valueOf(2000000)))
                 .calculationMin(generalUtil.convertToRM(BigDecimal.valueOf(600000)))
                 .caluclationMax(generalUtil.convertToRM(BigDecimal.valueOf(392000)))
                 .rate(1.0)
@@ -110,9 +109,9 @@ public class TaxRateMasterServiceImplTest {
 
         List<TaxRateMaster> taxRateMasterList = new ArrayList<>();
         TaxRateMaster taxRateMaster = TaxRateMaster.builder()
+                .id(1L)
                 .category("A")
                 .chargeableIncomeMin(BigDecimal.ONE)
-                .chargeableIncomeMax(BigDecimal.TEN)
                 .calculationMin(BigDecimal.ONE)
                 .caluclationMax(BigDecimal.TWO)
                 .rate(1.0)
@@ -127,7 +126,5 @@ public class TaxRateMasterServiceImplTest {
         taxRateMasterList.add(taxRateMaster);
         return taxRateMasterList;
     }
-
-
 
 }

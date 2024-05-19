@@ -27,26 +27,38 @@ public class TaxRateMasterRepositoryTest {
     private TaxRateMasterRepository taxRateMasterRepository;
 
     @Test
-    void testGetDataByPage() {
+    void testGetDataByPage_withFilter() {
         TaxRateMaster taxRateMasterA = createTaxRateMaster("A", BigDecimal.ZERO, BigDecimal.valueOf(5000),
-                BigDecimal.ZERO, BigDecimal.valueOf(5000), 0, BigDecimal.ZERO, BigDecimal.ZERO);
+                BigDecimal.ZERO, 0, BigDecimal.ZERO, BigDecimal.ZERO);
         TaxRateMaster taxRateMasterB = createTaxRateMaster("B", BigDecimal.valueOf(5001), BigDecimal.valueOf(20000),
-                BigDecimal.valueOf(5000), BigDecimal.valueOf(15000), 1, BigDecimal.ZERO, BigDecimal.valueOf(150));
+                BigDecimal.valueOf(5000), 1, BigDecimal.ZERO, BigDecimal.valueOf(150));
         entityManager.persist(taxRateMasterA);
         entityManager.persist(taxRateMasterB);
         entityManager.flush();
         Pageable pageable = PageRequest.of(0, 10);
-        Page<TaxRateMaster> page = taxRateMasterRepository.getDataByPage("%", pageable);
+        Page<TaxRateMaster> page = taxRateMasterRepository.getDataByPageWithFilter("%", pageable);
         assertEquals(2, page.getTotalElements());
     }
 
-    private TaxRateMaster createTaxRateMaster(String category, BigDecimal chargeableIncomeMin, BigDecimal chargeableIncomeMax,
-                                              BigDecimal calculationMin, BigDecimal calculationMax, double rate,
-                                              BigDecimal taxMin, BigDecimal taxMax) {
+    @Test
+    void testGetDataByPage() {
+        TaxRateMaster taxRateMasterA = createTaxRateMaster("A", BigDecimal.ZERO, BigDecimal.valueOf(5000),
+                BigDecimal.ZERO, 0, BigDecimal.ZERO, BigDecimal.ZERO);
+        TaxRateMaster taxRateMasterB = createTaxRateMaster("B", BigDecimal.valueOf(5001), BigDecimal.valueOf(20000),
+                BigDecimal.valueOf(5000), 1, BigDecimal.ZERO, BigDecimal.valueOf(150));
+        entityManager.persist(taxRateMasterA);
+        entityManager.persist(taxRateMasterB);
+        entityManager.flush();
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<TaxRateMaster> page = taxRateMasterRepository.getDataByPage(pageable);
+        assertEquals(2, page.getTotalElements());
+    }
+
+    private TaxRateMaster createTaxRateMaster(String category, BigDecimal chargeableIncomeMin, BigDecimal calculationMin,
+                                              BigDecimal calculationMax, double rate, BigDecimal taxMin, BigDecimal taxMax) {
         TaxRateMaster taxRateMaster = new TaxRateMaster();
         taxRateMaster.setCategory(category);
         taxRateMaster.setChargeableIncomeMin(chargeableIncomeMin);
-        taxRateMaster.setChargeableIncomeMax(chargeableIncomeMax);
         taxRateMaster.setCalculationMin(calculationMin);
         taxRateMaster.setCaluclationMax(calculationMax);
         taxRateMaster.setRate(rate);

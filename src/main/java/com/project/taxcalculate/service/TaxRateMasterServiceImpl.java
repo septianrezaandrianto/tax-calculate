@@ -34,25 +34,25 @@ public class TaxRateMasterServiceImpl implements TaxRateMasterService {
     public void insertMasterData() {
         log.info("Insert Master Data Start");
         List<TaxRateMaster> resultList = new ArrayList<>();
-        TaxRateMaster taxRateMasterA = mappingTaxMasterData("A", BigDecimal.ZERO, BigDecimal.valueOf(5000), BigDecimal.ZERO,
+        TaxRateMaster taxRateMasterA = mappingTaxMasterData("A", BigDecimal.ZERO, BigDecimal.ZERO,
                 BigDecimal.valueOf(5000), 0, BigDecimal.ZERO ,BigDecimal.ZERO);
-        TaxRateMaster taxRateMasterB = mappingTaxMasterData("B", BigDecimal.valueOf(5001), BigDecimal.valueOf(20000), BigDecimal.valueOf(5000),
+        TaxRateMaster taxRateMasterB = mappingTaxMasterData("B", BigDecimal.valueOf(5001), BigDecimal.valueOf(5000),
                 BigDecimal.valueOf(15000), 1, BigDecimal.ZERO, BigDecimal.valueOf(150));
-        TaxRateMaster taxRateMasterC = mappingTaxMasterData("C", BigDecimal.valueOf(20001), BigDecimal.valueOf(35000), BigDecimal.valueOf(20000),
+        TaxRateMaster taxRateMasterC = mappingTaxMasterData("C", BigDecimal.valueOf(20001), BigDecimal.valueOf(20000),
                 BigDecimal.valueOf(35000), 3, BigDecimal.valueOf(150), BigDecimal.valueOf(450));
-        TaxRateMaster taxRateMasterD = mappingTaxMasterData("D", BigDecimal.valueOf(35001), BigDecimal.valueOf(50000), BigDecimal.valueOf(35000),
+        TaxRateMaster taxRateMasterD = mappingTaxMasterData("D", BigDecimal.valueOf(35001), BigDecimal.valueOf(35000),
                 BigDecimal.valueOf(50000), 6, BigDecimal.valueOf(600), BigDecimal.valueOf(900));
-        TaxRateMaster taxRateMasterE = mappingTaxMasterData("E", BigDecimal.valueOf(50001), BigDecimal.valueOf(70000), BigDecimal.valueOf(50000),
+        TaxRateMaster taxRateMasterE = mappingTaxMasterData("E", BigDecimal.valueOf(50001), BigDecimal.valueOf(50000),
                 BigDecimal.valueOf(70000), 11, BigDecimal.valueOf(1500), BigDecimal.valueOf(2200));
-        TaxRateMaster taxRateMasterF = mappingTaxMasterData("F", BigDecimal.valueOf(70001), BigDecimal.valueOf(100000), BigDecimal.valueOf(70000),
+        TaxRateMaster taxRateMasterF = mappingTaxMasterData("F", BigDecimal.valueOf(70001), BigDecimal.valueOf(70000),
                 BigDecimal.valueOf(100000), 19, BigDecimal.valueOf(3700), BigDecimal.valueOf(5700));
-        TaxRateMaster taxRateMasterG = mappingTaxMasterData("G", BigDecimal.valueOf(100001), BigDecimal.valueOf(400000), BigDecimal.valueOf(100000),
+        TaxRateMaster taxRateMasterG = mappingTaxMasterData("G", BigDecimal.valueOf(100001), BigDecimal.valueOf(100000),
                 BigDecimal.valueOf(400000), 25, BigDecimal.valueOf(9400), BigDecimal.valueOf(75000));
-        TaxRateMaster taxRateMasterH = mappingTaxMasterData("H", BigDecimal.valueOf(400001), BigDecimal.valueOf(600000), BigDecimal.valueOf(400000),
+        TaxRateMaster taxRateMasterH = mappingTaxMasterData("H", BigDecimal.valueOf(400001), BigDecimal.valueOf(400000),
                 BigDecimal.valueOf(600000), 26, BigDecimal.valueOf(84400), BigDecimal.valueOf(52000));
-        TaxRateMaster taxRateMasterI = mappingTaxMasterData("I", BigDecimal.valueOf(600001), BigDecimal.valueOf(2000000), BigDecimal.valueOf(600000),
+        TaxRateMaster taxRateMasterI = mappingTaxMasterData("I", BigDecimal.valueOf(600001), BigDecimal.valueOf(600000),
                 BigDecimal.valueOf(2000000), 28, BigDecimal.valueOf(136400), BigDecimal.valueOf(392000));
-        TaxRateMaster taxRateMasterJ = mappingTaxMasterData("J", BigDecimal.valueOf(2000001), null, BigDecimal.valueOf(2000000),
+        TaxRateMaster taxRateMasterJ = mappingTaxMasterData("J", BigDecimal.valueOf(2000001), BigDecimal.valueOf(2000000),
                 null, 30, BigDecimal.valueOf(528400), null);
 
         resultList.add(taxRateMasterA);
@@ -72,11 +72,17 @@ public class TaxRateMasterServiceImpl implements TaxRateMasterService {
 
     @Override
     public GeneralResponse<Object> getDataByPage(PaginatePageRequest paginatePageRequest) {
-        String filter = generalUtil.mappingFilter(paginatePageRequest.getFilter());
         int pageSize = Integer.parseInt(paginatePageRequest.getPageSize());
         int pageNumber = Integer.parseInt(paginatePageRequest.getPageNumber());
         Pageable paging = PageRequest.of(pageNumber, pageSize);
-        Page<TaxRateMaster> taxRateMasterPage = taxRateMasterRepository.getDataByPage(filter,paging);
+
+        Page<TaxRateMaster> taxRateMasterPage;
+        if (Objects.nonNull(paginatePageRequest.getFilter()) && !"".equals(paginatePageRequest.getFilter())) {
+            String filter = generalUtil.mappingFilter(paginatePageRequest.getFilter());
+            taxRateMasterPage = taxRateMasterRepository.getDataByPageWithFilter(filter,paging);
+        } else {
+            taxRateMasterPage = taxRateMasterRepository.getDataByPage(paging);
+        }
 
         List<TaxRateMasterResponse> taxRateMasterResponseList = new ArrayList<>();
         if (!taxRateMasterPage.getContent().isEmpty()) {
@@ -84,7 +90,6 @@ public class TaxRateMasterServiceImpl implements TaxRateMasterService {
                 TaxRateMasterResponse trmr = new TaxRateMasterResponse(trm.getId(),
                         trm.getCategory(),
                         generalUtil.convertToRM(trm.getChargeableIncomeMin()),
-                        generalUtil.convertToRM(trm.getChargeableIncomeMax()),
                         generalUtil.convertToRM(trm.getCalculationMin()),
                         generalUtil.convertToRM(trm.getCaluclationMax()),
                         trm.getRate(),
@@ -105,14 +110,12 @@ public class TaxRateMasterServiceImpl implements TaxRateMasterService {
                 .build();
     }
 
-    private TaxRateMaster mappingTaxMasterData(String category, BigDecimal chargeableIncomeMin, BigDecimal chargeableIncomeMax,
-                                               BigDecimal calculationMin, BigDecimal caluclationMax, double rate, BigDecimal taxMin, BigDecimal taxMax) {
+    private TaxRateMaster mappingTaxMasterData(String category, BigDecimal chargeableIncomeMin,BigDecimal calculationMin,
+                                               BigDecimal caluclationMax, double rate, BigDecimal taxMin, BigDecimal taxMax) {
         Date nowDate = new Date();
-
         return TaxRateMaster.builder()
                 .category(category)
                 .chargeableIncomeMin(chargeableIncomeMin)
-                .chargeableIncomeMax(chargeableIncomeMax)
                 .calculationMin(calculationMin)
                 .caluclationMax(caluclationMax)
                 .rate(rate)
