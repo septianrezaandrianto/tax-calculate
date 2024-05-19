@@ -18,7 +18,7 @@ public class TaxRateMasterResponse {
     private String chargeableIncomeMin;
     private String calculationMin;
     private String caluclationMax;
-    private Double rate;
+    private Integer rate;
     private String taxMin;
     private String taxMax;
 }

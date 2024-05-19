@@ -4,5 +4,5 @@ import com.project.taxcalculate.dto.GeneralResponse;
 
 public interface TaxCalculatorService {
 
-    GeneralResponse<Object> calculateTax(double annualIncome);
+    GeneralResponse<Object> calculateTax(String annualIncome);
 }

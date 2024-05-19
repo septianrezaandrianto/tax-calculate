@@ -59,7 +59,7 @@ public class TaxRateMasterServiceImplTest {
         when(generalUtil.convertToRM(BigDecimal.valueOf(5000))).thenReturn("RM5,000");
         GeneralResponse<Object> response = taxRateMasterService.getDataByPage(request);
         assertEquals(HttpStatus.OK.value(), response.getResponseCode());
-        assertEquals(Constant.ResponseApi.SUCCESS_MESSAGE, response.getResponseMessage());
+        assertEquals(Constant.MESSAGE.SUCCESS_MESSAGE, response.getResponseMessage());
         assertEquals(mappingTaxRateMasterResponseList(), response.getData());
         assertEquals(0, response.getPageNumber());
         assertEquals(10, response.getPageSize());
@@ -80,7 +80,7 @@ public class TaxRateMasterServiceImplTest {
 
         GeneralResponse<Object> response = taxRateMasterService.getDataByPage(request);
         assertEquals(HttpStatus.OK.value(), response.getResponseCode());
-        assertEquals(Constant.ResponseApi.SUCCESS_MESSAGE, response.getResponseMessage());
+        assertEquals(Constant.MESSAGE.SUCCESS_MESSAGE, response.getResponseMessage());
         assertEquals(mappingTaxRateMasterResponseList(), response.getData());
         assertEquals(0, response.getPageNumber());
         assertEquals(10, response.getPageSize());
@@ -95,7 +95,7 @@ public class TaxRateMasterServiceImplTest {
                 .chargeableIncomeMin(generalUtil.convertToRM(BigDecimal.valueOf(600001)))
                 .calculationMin(generalUtil.convertToRM(BigDecimal.valueOf(600000)))
                 .caluclationMax(generalUtil.convertToRM(BigDecimal.valueOf(392000)))
-                .rate(1.0)
+                .rate(1)
                 .taxMin(generalUtil.convertToRM(BigDecimal.valueOf(2000000)))
                 .taxMax(generalUtil.convertToRM(BigDecimal.valueOf(136400)))
                 .build();
@@ -114,7 +114,7 @@ public class TaxRateMasterServiceImplTest {
                 .chargeableIncomeMin(BigDecimal.ONE)
                 .calculationMin(BigDecimal.ONE)
                 .caluclationMax(BigDecimal.TWO)
-                .rate(1.0)
+                .rate(1)
                 .taxMin(BigDecimal.ZERO)
                 .taxMax(BigDecimal.TEN)
                 .createdDate(nowDate)

@@ -1,0 +1,101 @@
+{
+	"info": {
+		"_postman_id": "4668c738-3b99-4b5c-bd2f-215ae8d3ae6c",
+		"name": "IS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26725654"
+	},
+	"item": [
+		{
+			"name": "getDataByPage",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"filter\" : \"\",\r\n    \"pageSize\" : \"3\",\r\n    \"pageNumber\" : \"0\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/taxRateMaster/getDataByPage",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"taxRateMaster",
+						"getDataByPage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getDataByPage",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"pageSize\" : \"3\",\r\n    \"pageNumber\" : \"0\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/taxReliefMaster/getDataByPage",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"taxReliefMaster",
+						"getDataByPage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TaxCalulate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"annualIncome\" : \"5001\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/tax/calculateTax",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tax",
+						"calculateTax"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

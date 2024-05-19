@@ -2,9 +2,10 @@ package com.project.taxcalculate.controller;
 
 import com.google.gson.Gson;
 import com.project.taxcalculate.constant.Constant;
+import com.project.taxcalculate.dto.CalculateTaxRequest;
 import com.project.taxcalculate.dto.GeneralResponse;
 import com.project.taxcalculate.dto.PaginatePageRequest;
-import com.project.taxcalculate.service.TaxReliefMasterServiceImpl;
+import com.project.taxcalculate.service.TaxCalculatorServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,30 +22,29 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(TaxReliefMasterController.class)
-public class TaxReliefMasterControllerTest {
+@WebMvcTest(TaxCalculatorController.class)
+public class TaxCalculatorControllerTest {
 
     @MockBean
-    private TaxReliefMasterServiceImpl taxReliefMasterService;
+    private TaxCalculatorServiceImpl taxCalculatorService;
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    public void testGetDataByPage() throws Exception {
-        PaginatePageRequest request = new PaginatePageRequest();
-        request.setFilter("");
-        request.setPageNumber("0");
-        request.setPageSize("10");
+    public void calculateTax() throws Exception {
+        CalculateTaxRequest calculateTaxRequest = CalculateTaxRequest.builder()
+                .annualIncome("10000")
+                .build();
 
-        when(taxReliefMasterService.getDataByPage(request))
+        when(taxCalculatorService.calculateTax(calculateTaxRequest.getAnnualIncome()))
                 .thenReturn(mappingGeneralResponse());
 
         MockHttpServletResponse result = mockMvc.perform(MockMvcRequestBuilders
-                        .post("/taxReliefMaster/getDataByPage")
+                        .post("/tax/calculateTax")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .characterEncoding("utf-8")
-                        .content(new Gson().toJson(request)))
+                        .content(new Gson().toJson(calculateTaxRequest)))
                 .andReturn().getResponse();
         assertEquals(HttpStatus.OK.value(), result.getStatus());
     }
@@ -55,5 +55,4 @@ public class TaxReliefMasterControllerTest {
                 .responseMessage(Constant.MESSAGE.SUCCESS_MESSAGE)
                 .build();
     }
-
 }

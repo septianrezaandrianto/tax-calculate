@@ -60,8 +60,7 @@ public class TaxReliefMasterServiceImplTest {
         when(generalUtil.convertToRM(BigDecimal.valueOf(5000))).thenReturn("RM5,000");
         GeneralResponse<Object> response = taxReliefMasterService.getDataByPage(request);
         assertEquals(HttpStatus.OK.value(), response.getResponseCode());
-        assertEquals(Constant.ResponseApi.SUCCESS_MESSAGE, response.getResponseMessage());
-//        assertEquals(mappingTaxRateMasterResponseList(), response.getData());
+        assertEquals(Constant.MESSAGE.SUCCESS_MESSAGE, response.getResponseMessage());
         assertEquals(0, response.getPageNumber());
         assertEquals(10, response.getPageSize());
         assertEquals(1, response.getTotalData());

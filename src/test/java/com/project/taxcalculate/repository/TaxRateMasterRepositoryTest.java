@@ -27,7 +27,7 @@ public class TaxRateMasterRepositoryTest {
     private TaxRateMasterRepository taxRateMasterRepository;
 
     @Test
-    void testGetDataByPage_withFilter() {
+    void testGetDataByPageWithFilter() {
         TaxRateMaster taxRateMasterA = createTaxRateMaster("A", BigDecimal.ZERO, BigDecimal.valueOf(5000),
                 BigDecimal.ZERO, 0, BigDecimal.ZERO, BigDecimal.ZERO);
         TaxRateMaster taxRateMasterB = createTaxRateMaster("B", BigDecimal.valueOf(5001), BigDecimal.valueOf(20000),
@@ -54,8 +54,21 @@ public class TaxRateMasterRepositoryTest {
         assertEquals(2, page.getTotalElements());
     }
 
+    @Test
+    void testGetTaxRateMasterByIncomeMin() {
+        TaxRateMaster taxRateMasterA = createTaxRateMaster("A", BigDecimal.ZERO, BigDecimal.valueOf(5000),
+                BigDecimal.ZERO, 0, BigDecimal.ZERO, BigDecimal.ZERO);
+        TaxRateMaster taxRateMasterB = createTaxRateMaster("B", BigDecimal.valueOf(5001), BigDecimal.valueOf(20000),
+                BigDecimal.valueOf(5000), 1, BigDecimal.ZERO, BigDecimal.valueOf(150));
+        entityManager.persist(taxRateMasterA);
+        entityManager.persist(taxRateMasterB);
+        entityManager.flush();
+        TaxRateMaster taxRateMaster = taxRateMasterRepository.getTaxRateMasterByIncomeMin(BigDecimal.valueOf(5000));
+        assertNotNull(taxRateMaster);
+    }
+
     private TaxRateMaster createTaxRateMaster(String category, BigDecimal chargeableIncomeMin, BigDecimal calculationMin,
-                                              BigDecimal calculationMax, double rate, BigDecimal taxMin, BigDecimal taxMax) {
+                                              BigDecimal calculationMax, int rate, BigDecimal taxMin, BigDecimal taxMax) {
         TaxRateMaster taxRateMaster = new TaxRateMaster();
         taxRateMaster.setCategory(category);
         taxRateMaster.setChargeableIncomeMin(chargeableIncomeMin);

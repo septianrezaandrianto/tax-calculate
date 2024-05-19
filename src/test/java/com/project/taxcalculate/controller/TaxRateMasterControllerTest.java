@@ -52,7 +52,7 @@ public class TaxRateMasterControllerTest {
     private GeneralResponse<Object> mappingGeneralResponse() {
         return GeneralResponse.builder()
                 .responseCode(HttpStatus.OK.value())
-                .responseMessage(Constant.ResponseApi.SUCCESS_MESSAGE)
+                .responseMessage(Constant.MESSAGE.SUCCESS_MESSAGE)
                 .build();
     }
 }

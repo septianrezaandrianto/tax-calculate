@@ -29,7 +29,7 @@ public class TaxRateMaster implements Serializable {
     private BigDecimal chargeableIncomeMin;
     private BigDecimal calculationMin;
     private BigDecimal caluclationMax;
-    private Double rate;
+    private Integer rate;
     private BigDecimal taxMin;
     private BigDecimal taxMax;
     private Date createdDate;

@@ -251,7 +251,7 @@ public class TaxReliefMasterServiceImpl implements TaxReliefMasterService {
 
         return GeneralResponse.builder()
                 .responseCode(HttpStatus.OK.value())
-                .responseMessage(Constant.ResponseApi.SUCCESS_MESSAGE)
+                .responseMessage(Constant.MESSAGE.SUCCESS_MESSAGE)
                 .data(taxReliefMasterResponseList)
                 .pageNumber(pageNumber)
                 .pageSize(pageSize)
